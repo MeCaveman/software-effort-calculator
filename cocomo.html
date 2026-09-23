@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Basic COCOMO effort calculator using the constants from the supplied software project estimation lecture." />
+  <title>Basic COCOMO · Software Effort Lab</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V8m5 11V5m5 14v-7m5 7V3"/></svg></span>
+        <span>Software Effort Lab</span>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" href="/function-points.html">Function Points</a>
+        <a class="nav-link" aria-current="page" href="/cocomo.html">COCOMO</a>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Basic model</span>
+        <h1>Basic COCOMO calculator</h1>
+        <p>Choose the software project type and enter delivered source size. The calculator uses the C and K values shown in the supplied lecture and computes effort in person-months.</p>
+      </div>
+      <div class="page-actions"><button id="cocomo-example" class="button primary" type="button">Load 4 KLOC example</button><button id="cocomo-reset" class="button" type="button">Reset</button></div>
+    </div>
+
+    <div class="app-grid">
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-header"><div><h2>1. Project mode</h2><p>Select the mode that matches the project constraints and team environment.</p></div></div>
+          <div class="panel-body">
+            <div class="mode-cards">
+              <label class="mode-card"><input type="radio" name="project-mode" value="organic" checked><span class="mode-card-content"><strong>Organic</strong><span>Small, relatively simple projects with experienced teams and less-rigid requirements.</span><span class="constant-pills"><span>C = 3.2</span><span>K = 1.05</span></span></span></label>
+              <label class="mode-card"><input type="radio" name="project-mode" value="semi"><span class="mode-card-content"><strong>Semi-detached</strong><span>Intermediate projects with mixed experience and a mix of rigid and flexible requirements.</span><span class="constant-pills"><span>C = 3.0</span><span>K = 1.12</span></span></span></label>
+              <label class="mode-card"><input type="radio" name="project-mode" value="embedded"><span class="mode-card-content"><strong>Embedded</strong><span>Projects constrained by tight hardware, software, or operational requirements.</span><span class="constant-pills"><span>C = 2.8</span><span>K = 1.20</span></span></span></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><div><h2>2. Project inputs</h2><p>Enter the estimated delivered source size and, optionally, a monthly labor rate.</p></div></div>
+          <div class="panel-body">
+            <div class="fields-grid">
+              <div class="field">
+                <label for="size">Source size</label>
+                <div class="input-with-unit"><input id="size" type="number" min="0" step="0.1" placeholder="e.g. 4"><select id="size-unit"><option value="kloc">KLOC</option><option value="loc">LOC</option></select></div>
+              </div>
+              <div class="field">
+                <label for="labor-rate">Labor rate / person-month</label>
+                <div class="input-with-unit"><input id="labor-rate" type="number" min="0" step="1" placeholder="optional"><select id="currency" aria-label="Currency"><option value="USD">USD</option><option value="SAR">SAR</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
+              </div>
+            </div>
+            <div class="notice" style="margin-top:18px"><strong>Lecture alignment:</strong> this page intentionally uses C = 3.2 / 3.0 / 2.8 and K = 1.05 / 1.12 / 1.20 because those are the constants in the supplied material.</div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="panel results-panel" aria-label="COCOMO results">
+        <div class="result-hero"><span>Estimated effort</span><strong id="effort-value">Enter project size</strong></div>
+        <div class="result-list">
+          <div class="result-row"><span>Mode</span><strong id="mode-label">Organic</strong></div>
+          <div class="result-row"><span>Project size</span><strong><span id="kloc-value">0</span> KLOC</strong></div>
+          <div class="result-row"><span>C constant</span><strong id="constant-c">3.2</strong></div>
+          <div class="result-row"><span>K exponent</span><strong id="constant-k">1.05</strong></div>
+          <div class="result-row"><span>Estimated labor cost</span><strong id="cost-value">Add labor rate</strong></div>
+        </div>
+        <div class="formula-box"><p id="formula-value">E = 3.2 × (KLOC)^1.05</p></div>
+        <div class="panel-body" style="padding-top:0"><p id="mode-description" style="margin:0;color:var(--text-muted);font-size:.82rem;line-height:1.55"></p></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><span>Basic COCOMO only.</span><a href="/">Back to calculators</a></div></footer>
+  <script type="module" src="/src/cocomo.ts"></script>
+</body>
+</html>

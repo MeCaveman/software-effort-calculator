@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Function Point and LOC backfiring calculator with O/R/P estimation and modern language gearing factors." />
+  <title>Function Point + LOC · Software Effort Lab</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V8m5 11V5m5 14v-7m5 7V3"/></svg></span>
+        <span>Software Effort Lab</span>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" aria-current="page" href="/function-points.html">Function Points</a>
+        <a class="nav-link" href="/cocomo.html">COCOMO</a>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">FP + backfiring</span>
+        <h1>Function Point calculator</h1>
+        <p>Implements the lecture workflow: estimate counts, apply Simple/Average/Complex weights, adjust with ΣFi, then convert Function Points to LOC. Productivity and labor rate are optional.</p>
+      </div>
+      <div class="page-actions">
+        <select id="example-select" class="select-button" aria-label="Load lecture example">
+          <option value="">Load lecture example…</option>
+          <option value="exercise1">Exercise 1 · O/R/P</option>
+          <option value="exercise2">Exercise 2 · O/R/P</option>
+          <option value="exercise3">Exercise 3 · Direct count</option>
+        </select>
+        <button id="reset-button" class="button" type="button">Reset</button>
+      </div>
+    </div>
+
+    <div class="app-grid">
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-header">
+            <div><h2>1. Measurement parameters</h2><p>Enter counts and choose the functional complexity for each parameter.</p></div>
+            <div class="segmented" aria-label="Count input mode">
+              <label><input type="radio" name="count-mode" value="orp" checked><span>O / R / P</span></label>
+              <label><input type="radio" name="count-mode" value="direct"><span>Direct</span></label>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>Parameter</th>
+                  <th class="orp-cell">Optimistic</th>
+                  <th class="orp-cell">Realistic</th>
+                  <th class="orp-cell">Pessimistic</th>
+                  <th class="direct-cell" hidden>Direct count</th>
+                  <th id="estimated-header">Estimated count</th>
+                  <th>Complexity</th>
+                  <th>Weighted total</th>
+                </tr></thead>
+                <tbody id="measurement-body"></tbody>
+              </table>
+            </div>
+            <p id="count-mode-note" class="formula-note">Estimated count = (Optimistic + 4 × Realistic + Pessimistic) / 6</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div><h2>2. Complexity adjustment</h2><p>Use a supplied ΣFi value or score all 14 General System Characteristics.</p></div>
+            <div class="segmented" aria-label="Complexity adjustment input mode">
+              <label><input type="radio" name="gsc-mode" value="direct" checked><span>Enter ΣFi</span></label>
+              <label><input type="radio" name="gsc-mode" value="detailed"><span>14 factors</span></label>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="gsc-direct-panel" class="fields-grid">
+              <div class="field">
+                <label for="twf-direct">Total Weighting Factor (ΣFi)</label>
+                <input id="twf-direct" type="number" min="0" max="70" step="1" value="0">
+                <small>Valid range: 0–70.</small>
+              </div>
+              <div class="field">
+                <label for="rounding-mode">Intermediate rounding</label>
+                <select id="rounding-mode">
+                  <option value="precise">Precise · keep decimals</option>
+                  <option value="lecture">Lecture-style · round UFC first</option>
+                </select>
+                <small>The slides sometimes round UFC before calculating FP.</small>
+              </div>
+            </div>
+            <div id="gsc-detailed-panel" hidden>
+              <div id="gsc-list" class="gsc-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><div><h2>3. LOC and effort assumptions</h2><p>Select a language, then optionally add organizational productivity and labor rate.</p></div></div>
+          <div class="panel-body">
+            <div class="fields-grid">
+              <div class="field">
+                <label for="language">Programming language</label>
+                <select id="language"></select>
+              </div>
+              <div class="field">
+                <label for="loc-factor">LOC per Function Point</label>
+                <input id="loc-factor" type="number" min="0" step="0.1" value="47">
+              </div>
+              <div class="field">
+                <label for="productivity">Productivity (FP / person-month)</label>
+                <input id="productivity" type="number" min="0" step="0.1" placeholder="e.g. 7">
+              </div>
+              <div class="field">
+                <label for="labor-rate">Labor rate / person-month</label>
+                <div class="input-with-unit">
+                  <input id="labor-rate" type="number" min="0" step="1" placeholder="e.g. 4000">
+                  <select id="currency" aria-label="Currency">
+                    <option value="USD">USD</option><option value="SAR">SAR</option><option value="EUR">EUR</option><option value="GBP">GBP</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <p class="inline-source"><strong>Factor source:</strong> <a id="factor-source" href="#" target="_blank" rel="noreferrer"></a>. <span id="factor-note"></span></p>
+            <div class="notice" style="margin-top:16px"><strong>Why the factor is editable:</strong> LOC/FP backfiring values are empirical gearing factors, not language constants. QSM recommends calibrating them with your own completed-project data when available.</div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="panel results-panel" aria-label="Calculation results">
+        <div class="result-hero"><span>Adjusted Function Points</span><strong id="fp-value">0</strong></div>
+        <div class="result-list">
+          <div class="result-row"><span>Unadjusted count (UFC)</span><strong id="ufc-value">0</strong></div>
+          <div class="result-row"><span>ΣFi / TWF</span><strong id="twf-value">0</strong></div>
+          <div class="result-row"><span>TCF / VAF</span><strong id="tcf-value">0.65</strong></div>
+          <div class="result-row"><span>Estimated LOC</span><strong id="loc-value">0</strong></div>
+          <div class="result-row"><span>Estimated effort</span><strong id="effort-value">Add productivity</strong></div>
+          <div class="result-row"><span>Cost / FP</span><strong id="cost-per-fp-value">Add productivity + rate</strong></div>
+          <div class="result-row"><span>Total project cost</span><strong id="total-cost-value">Add productivity + rate</strong></div>
+        </div>
+        <div class="formula-box"><p id="formula-fp"></p><p id="formula-loc"></p></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><span>All calculations run locally in your browser.</span><a href="/">Back to calculators</a></div></footer>
+  <script type="module" src="/src/function-points.ts"></script>
+</body>
+</html>

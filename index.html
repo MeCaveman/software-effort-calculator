@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Modern software effort estimation calculators for Function Points, LOC backfiring, and Basic COCOMO." />
+  <title>Software Effort Lab</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V8m5 11V5m5 14v-7m5 7V3"/></svg></span>
+        <span>Software Effort Lab</span>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" href="/function-points.html">Function Points</a>
+        <a class="nav-link" href="/cocomo.html">COCOMO</a>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="eyebrow">Software project estimation</span>
+      <h1>Estimate software size and effort without the spreadsheet.</h1>
+      <p>Choose a calculation method. Both tools update immediately as you enter project data, with formulas and intermediate values visible so the result remains easy to audit.</p>
+    </section>
+
+    <section class="choice-grid" aria-label="Choose a calculator">
+      <a class="choice-card" href="/function-points.html">
+        <div>
+          <span class="choice-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 2v4M16 2v4M8 18v4M16 18v4M2 8h4M18 8h4M2 16h4M18 16h4"/></svg></span>
+          <h2>Function Point + LOC</h2>
+          <p>Use optimistic, realistic, and pessimistic counts or direct counts, apply complexity weights and system characteristics, then convert FP to estimated LOC with updated language gearing factors.</p>
+        </div>
+        <div class="card-footer"><span>Open calculator</span><span>→</span></div>
+      </a>
+
+      <a class="choice-card" href="/cocomo.html">
+        <div>
+          <span class="choice-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16l3-4 3 2 5-7 2 2"/></svg></span>
+          <h2>Basic COCOMO</h2>
+          <p>Estimate person-month effort from project size using the Organic, Semi-detached, or Embedded constants used in the supplied lecture material.</p>
+        </div>
+        <div class="card-footer"><span>Open calculator</span><span>→</span></div>
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><span>Client-side only · no project data is uploaded.</span><span>Built for static deployment on Vercel.</span></div></footer>
+  <script type="module">import { initTheme } from '/src/common.ts'; initTheme();</script>
+</body>
+</html>
