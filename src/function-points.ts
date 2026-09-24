@@ -100,7 +100,7 @@ function rowMarkup(parameter: Parameter): string {
       <td class="orp-cell"><input class="table-input" data-field="r" type="number" min="0" step="1" value="0" aria-label="${parameter.label} realistic count"></td>
       <td class="orp-cell"><input class="table-input" data-field="p" type="number" min="0" step="1" value="0" aria-label="${parameter.label} pessimistic count"></td>
       <td class="direct-cell" hidden><input class="table-input" data-field="count" type="number" min="0" step="1" value="0" aria-label="${parameter.label} count"></td>
-      <td><span class="calculated-cell" data-field="estimated">0</span></td>
+      <td class="estimated-cell"><span class="calculated-cell" data-field="estimated">0</span></td>
       <td>
         <select class="table-select" data-field="complexity" aria-label="${parameter.label} complexity">
           <option value="simple">Simple · ${parameter.weights.simple}</option>
@@ -194,7 +194,8 @@ function updateCountMode(): void {
   const mode = currentCountMode();
   document.querySelectorAll<HTMLElement>('.orp-cell').forEach((cell) => { cell.hidden = mode !== 'orp'; });
   document.querySelectorAll<HTMLElement>('.direct-cell').forEach((cell) => { cell.hidden = mode !== 'direct'; });
-  setText('#estimated-header', mode === 'orp' ? 'Estimated count' : 'Count');
+  document.querySelectorAll<HTMLElement>('.estimated-cell').forEach((cell) => { cell.hidden = mode === 'direct'; });
+  setText('#estimated-header', 'Estimated count');
   setText('#count-mode-note', mode === 'orp'
     ? 'Estimated count = (Optimistic + 4 × Realistic + Pessimistic) / 6'
     : 'Enter the known count directly, as in the lecture’s direct-count example.');
